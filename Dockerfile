@@ -7,9 +7,9 @@ RUN npm install
 
 COPY src/ .
 
-RUN mkdir -p logs && chown -R i2btech:i2btech logs
+RUN mkdir -p logs && chown -R node:node logs
 
-USER i2btech
+USER usri2btech
 EXPOSE 8080
 
 CMD ["node", "index.js"]

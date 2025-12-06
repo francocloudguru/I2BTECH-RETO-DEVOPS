@@ -1,6 +1,5 @@
-version: '3.8'
 services:
-  node:
+  ib2btech-app:
     build: .
     volumes:
       - ./logs:/app/logs
@@ -13,11 +12,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - ./certs:/etc/nginx/certs
       - ./htpasswd:/etc/nginx/.htpasswd
     depends_on:
-      - node
+      - ib2btech-app
     networks:
       - app-network
 
