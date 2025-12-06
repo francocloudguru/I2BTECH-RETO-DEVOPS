@@ -1,0 +1,16 @@
+image:
+  repository: $IMAGE_REPOSITORY
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+app:
+  port: 3000
+
+service:
+  type: LoadBalancer
+  port: 443
+
+persistence:
+  logsPath: "/var/i2btech-logs"
+
+domain: "i2btech-reto-devops.com"

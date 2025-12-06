@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: i2btech-reto-app
+spec:
+  rules:
+    - host: i2btech-reto-devops.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: i2btech-reto-app
+                port:
+                  number: 443
