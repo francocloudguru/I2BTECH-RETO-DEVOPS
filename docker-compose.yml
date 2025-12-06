@@ -1,7 +1,7 @@
-version: '3.8'
 services:
-  node:
+  ib2btech-app:
     build: .
+    image: ib2btech-app:local
     volumes:
       - ./logs:/app/logs
     networks:
@@ -9,17 +9,18 @@ services:
 
   nginx:
     image: nginx:alpine
+    depends_on:
+      - ib2btech-app
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./certs:/etc/nginx/certs
-      - ./htpasswd:/etc/nginx/.htpasswd
-    depends_on:
-      - node
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./htpasswd/.htpasswd:/etc/nginx/.htpasswd:ro
     networks:
       - app-network
 
 networks:
   app-network:
+    driver: bridge

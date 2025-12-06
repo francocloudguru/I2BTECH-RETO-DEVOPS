@@ -3,13 +3,13 @@ FROM node:lts-slim
 WORKDIR /app
 
 COPY src/package*.json ./
-RUN npm install
+RUN npm install --only=production
 
 COPY src/ .
 
-RUN mkdir -p logs && chown -R i2btech:i2btech logs
+RUN mkdir -p logs && chown -R node:node logs
 
-USER i2btech
+USER node
 EXPOSE 8080
 
 CMD ["node", "index.js"]

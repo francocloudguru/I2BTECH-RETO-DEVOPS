@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: i2btech-reto-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: i2btech-reto-app
+  template:
+    metadata:
+      labels:
+        app: i2btech-reto-app
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.app.port }}
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 443
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            - name: certs
+              mountPath: /etc/nginx/certs
+            - name: htpasswd
+              mountPath: /etc/nginx/.htpasswd
+              subPath: .htpasswd
+
+      volumes:
+        - name: logs
+          hostPath:
+            path: {{ .Values.persistence.logsPath }}
+
+        - name: nginx-conf
+          configMap:
+            name: i2btech-reto-app-nginx-conf
+
+        - name: certs
+          secret:
+            secretName: i2btech-reto-app-tls
+
+        - name: htpasswd
+          secret:
+            secretName: i2btech-reto-app-basic-auth
