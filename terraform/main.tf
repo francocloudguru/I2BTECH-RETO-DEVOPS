@@ -1,6 +1,6 @@
-resource "helm_release" "i2btech-reto-app2" {
-  name      = "i2btech-reto-app2"
-  chart     = "../charts/i2btech-reto-app2"
+resource "helm_release" "i2btech-reto-app" {
+  name      = "i2btech-reto-app"
+  chart     = "../charts/i2btech-reto-app"
   namespace = "i2btech-reto-app-ns"
 
   set {
