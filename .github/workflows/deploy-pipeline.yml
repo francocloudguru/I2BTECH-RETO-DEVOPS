@@ -48,14 +48,15 @@ jobs:
 
           kubectl create ns i2btech-reto-app-ns --dry-run=client -o yaml | kubectl apply -f -
 
-          # Crear secretos para nginx en Kubernetes
           kubectl create secret generic i2btech-reto-app-basic-auth \
             --from-literal=.htpasswd="${{ secrets.HTPASSWD_CONTENT }}" \
+            -n i2btech-reto-app-ns \
             --dry-run=client -o yaml | kubectl apply -f -
 
           kubectl create secret tls i2btech-reto-app-tls \
             --cert=<(echo "${{ secrets.TLS_CERT }}") \
             --key=<(echo "${{ secrets.TLS_KEY }}") \
+            -n i2btech-reto-app-ns \
             --dry-run=client -o yaml | kubectl apply -f -
 
     - name: Terraform apply (deploy Helm chart)
