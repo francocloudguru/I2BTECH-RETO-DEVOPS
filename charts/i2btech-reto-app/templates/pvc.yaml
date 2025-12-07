@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: i2btech-reto-app-pv
+  name: i2btech-reto-app-pv2
 spec:
   capacity:
     storage: 1Gi
@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: i2btech-reto-app-pvc
+  name: i2btech-reto-app-pvc2
 spec:
   accessModes:
     - ReadWriteOnce

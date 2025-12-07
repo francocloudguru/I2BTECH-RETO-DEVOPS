@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: i2btech-reto-app
+  name: i2btech-reto-app2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: i2btech-reto-app
+      app: i2btech-reto-app2
   template:
     metadata:
       labels:
-        app: i2btech-reto-app
+        app: i2btech-reto-app2
     spec:
       containers:
         - name: app
