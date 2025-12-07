@@ -46,7 +46,7 @@ jobs:
           ansible-playbook -i "localhost," -c local playbook.yml
           cd ..
 
-          kubectl create ns i2btech-reto-app --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create ns i2btech-reto-app-ns --dry-run=client -o yaml | kubectl apply -f -
 
           # Crear secretos para nginx en Kubernetes
           kubectl create secret generic i2btech-reto-app-basic-auth \
