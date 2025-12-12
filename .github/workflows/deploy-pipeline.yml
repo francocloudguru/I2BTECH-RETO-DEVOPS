@@ -59,6 +59,11 @@ jobs:
             -n i2btech-reto-app-ns \
             --dry-run=client -o yaml | kubectl apply -f -
 
+          kubectl create configmap i2btech-reto-app-nginx-conf \
+            --from-file=default.conf=nginx/config.d/default.conf \
+            -n i2btech-reto-app-ns \
+            --dry-run=client -o yaml | kubectl apply -f -
+
     - name: Terraform apply (deploy Helm chart)
       uses: appleboy/ssh-action@v1.0.3
       with:
