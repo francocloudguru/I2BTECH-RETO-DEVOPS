@@ -38,8 +38,8 @@ spec:
 
       volumes:
         - name: logs
-          hostPath:
-            path: {{ .Values.persistence.logsPath }}
+          persistentVolumeClaim:
+            claimName: i2btech-reto-app-pvc3
 
         - name: nginx-conf
           configMap:
