@@ -5,6 +5,12 @@ metadata:
 data:
   default.conf: |
     server {
+      listen 80;
+      server_name {{ .Values.domain }};
+      return 301 https://$host$request_uri;
+    }
+
+    server {
       listen 443 ssl;
       server_name {{ .Values.domain }};
 
