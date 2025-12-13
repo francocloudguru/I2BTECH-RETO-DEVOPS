@@ -92,27 +92,6 @@
         dest: /usr/local/bin/kubectl
         mode: "0755"
 
-    - name: Install minikube
-      get_url:
-        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-        dest: /usr/local/bin/minikube
-        mode: "0755"
-
-    - name: Start minikube with driver=none and containerd runtime
-      command: minikube start --driver=none --container-runtime=containerd
-      environment:
-        CHANGE_MINIKUBE_NONE_USER: "true"
-
-    - name: Wait for Kubernetes API to be ready
-      shell: |
-        for i in {1..40}; do
-          if kubectl get nodes >/dev/null 2>&1; then
-            exit 0
-          fi
-          sleep 5
-        done
-        exit 1
-
     - name: Install terraform
       unarchive:
         src: https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip
