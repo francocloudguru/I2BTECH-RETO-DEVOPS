@@ -44,8 +44,8 @@
         dest: /usr/local/bin/minikube
         mode: "0755"
 
-    - name: Start minikube with driver=none
-      command: minikube start --driver=none
+    - name: Start minikube with driver=none 
+      command: minikube start --driver=none --container-runtime=containerd
       environment:
         CHANGE_MINIKUBE_NONE_USER: "true"
 
