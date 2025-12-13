@@ -7,6 +7,6 @@ spec:
   selector:
     app: i2btech-reto-app3
   ports:
-    - name: https
+    - name: http
       port: {{ .Values.service.port }}
-      targetPort: 443
+      targetPort: 80
