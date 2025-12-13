@@ -55,12 +55,79 @@
         state: directory
         mode: "0755"
 
+    - name: Download CNI plugins
+      get_url:
+        url: https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
+        dest: /tmp/cni.tgz
+        mode: "0644"
+
     - name: Install CNI plugins
       unarchive:
-        src: https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
+        src: /tmp/cni.tgz
         dest: /opt/cni/bin
         remote_src: yes
 
+    - name: Download crictl
+      get_url:
+        url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.30.0/crictl-v1.30.0-linux-amd64.tar.gz
+        dest: /tmp/crictl.tar.gz
+        mode: "0644"
+
     - name: Install crictl
       unarchive:
-        src: https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.30.0/crictl-v1.30.0
+        src: /tmp/crictl.tar.gz
+        dest: /usr/local/bin
+        remote_src: yes
+
+    - name: Disable fs.protected_regular for minikube compatibility
+      sysctl:
+        name: fs.protected_regular
+        value: 0
+        state: present
+        reload: yes
+
+    - name: Install kubectl
+      get_url:
+        url: https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl
+        dest: /usr/local/bin/kubectl
+        mode: "0755"
+
+    - name: Install minikube
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: "0755"
+
+    - name: Start minikube with driver=none and containerd runtime
+      command: minikube start --driver=none --container-runtime=containerd
+      environment:
+        CHANGE_MINIKUBE_NONE_USER: "true"
+
+    - name: Wait for Kubernetes API to be ready
+      shell: |
+        for i in {1..40}; do
+          if kubectl get nodes >/dev/null 2>&1; then
+            exit 0
+          fi
+          sleep 5
+        done
+        exit 1
+
+    - name: Install terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+
+    - name: Create logs hostPath directory
+      file:
+        path: /var/i2btech-logs
+        state: directory
+        mode: "0777"
+
+    - name: Verify installations
+      command: "{{ item }}"
+      loop:
+        - kubectl version --client
+        - minikube version
+        - terraform version
