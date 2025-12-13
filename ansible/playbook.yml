@@ -5,7 +5,7 @@
       apt:
         update_cache: yes
 
-    - name: Install required packages for minikube none driver
+    - name: Install required base packages
       apt:
         name:
           - curl
@@ -26,58 +26,73 @@
         state: started
         enabled: yes
 
+    - name: Check if minikube is installed
+      stat:
+        path: /usr/local/bin/minikube
+      register: minikube_installed
+
+    # Solo tocamos containerd, CNI y crictl si minikube NO está instalado aún
     - name: Ensure containerd config directory exists
       file:
         path: /etc/containerd
         state: directory
         mode: "0755"
+      when: not minikube_installed.stat.exists
 
     - name: Generate default containerd config.toml
       shell: |
         containerd config default > /etc/containerd/config.toml
       args:
         creates: /etc/containerd/config.toml
+      when: not minikube_installed.stat.exists
 
     - name: Set correct sandbox_image in containerd config
       replace:
         path: /etc/containerd/config.toml
         regexp: 'sandbox_image = ".*"'
         replace: 'sandbox_image = "registry.k8s.io/pause:3.10.1"'
+      when: not minikube_installed.stat.exists
 
     - name: Restart containerd after config changes
       systemd:
         name: containerd
         state: restarted
+      when: not minikube_installed.stat.exists
 
     - name: Ensure CNI directory exists
       file:
         path: /opt/cni/bin
         state: directory
         mode: "0755"
+      when: not minikube_installed.stat.exists
 
     - name: Download CNI plugins
       get_url:
         url: https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz
         dest: /tmp/cni.tgz
         mode: "0644"
+      when: not minikube_installed.stat.exists
 
     - name: Install CNI plugins
       unarchive:
         src: /tmp/cni.tgz
         dest: /opt/cni/bin
         remote_src: yes
+      when: not minikube_installed.stat.exists
 
     - name: Download crictl
       get_url:
         url: https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.30.0/crictl-v1.30.0-linux-amd64.tar.gz
         dest: /tmp/crictl.tar.gz
         mode: "0644"
+      when: not minikube_installed.stat.exists
 
     - name: Install crictl
       unarchive:
         src: /tmp/crictl.tar.gz
         dest: /usr/local/bin
         remote_src: yes
+      when: not minikube_installed.stat.exists
 
     - name: Disable fs.protected_regular for minikube compatibility
       sysctl:
@@ -108,5 +123,4 @@
       command: "{{ item }}"
       loop:
         - kubectl version --client
-        - minikube version
         - terraform version
