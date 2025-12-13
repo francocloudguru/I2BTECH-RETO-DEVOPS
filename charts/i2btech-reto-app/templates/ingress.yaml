@@ -5,7 +5,7 @@ metadata:
   namespace: i2btech-reto-app-ns
 spec:
   rules:
-    - host: 172-68-0-11.nip.io
+    - host: 172-68-0-6.nip.io
       http:
         paths:
           - path: /
