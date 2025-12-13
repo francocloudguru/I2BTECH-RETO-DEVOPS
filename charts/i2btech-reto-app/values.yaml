@@ -13,4 +13,4 @@ service:
 persistence:
   logsPath: "/var/i2btech-logs"
 
-domain: "172.68.0.11.nip.io"
+domain: "172.68.0.6.nip.io"
