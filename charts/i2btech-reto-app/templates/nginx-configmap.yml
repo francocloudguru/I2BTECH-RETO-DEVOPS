@@ -7,15 +7,6 @@ data:
     server {
       listen 80;
       server_name {{ .Values.domain }};
-      return 301 https://$host$request_uri;
-    }
-
-    server {
-      listen 443 ssl;
-      server_name {{ .Values.domain }};
-
-      ssl_certificate /etc/nginx/certs/tls.crt;
-      ssl_certificate_key /etc/nginx/certs/tls.key;
 
       location / {
         proxy_pass http://localhost:{{ .Values.app.port }};

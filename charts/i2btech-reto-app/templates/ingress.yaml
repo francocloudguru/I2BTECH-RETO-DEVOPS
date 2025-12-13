@@ -15,6 +15,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: i2btech-service
+                name: i2btech-reto-app3
                 port:
                   number: 80

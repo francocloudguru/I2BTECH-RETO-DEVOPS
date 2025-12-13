@@ -53,12 +53,6 @@ jobs:
             -n i2btech-reto-app-ns \
             --dry-run=client -o yaml | kubectl apply -f -
 
-          kubectl create secret tls i2btech-reto-app-tls \
-            --cert=<(echo "${{ secrets.TLS_CERT }}") \
-            --key=<(echo "${{ secrets.TLS_KEY }}") \
-            -n i2btech-reto-app-ns \
-            --dry-run=client -o yaml | kubectl apply -f -
-
     - name: Terraform apply (deploy Helm chart)
       uses: appleboy/ssh-action@v1.0.3
       with:
