@@ -1,10 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: i2btech-reto-app3
+  name: i2btech-reto-app-ingress
+  namespace: i2btech-reto-app-ns
 spec:
   rules:
-    - host: i2btech-reto-devops.com
+    - host: 172-68-0-11.nip.io
       http:
         paths:
           - path: /
