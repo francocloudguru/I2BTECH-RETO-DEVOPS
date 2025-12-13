@@ -5,7 +5,7 @@
       apt:
         update_cache: yes
 
-    - name: Install base packages for minikube driver=none
+    - name: Install required packages for minikube none driver
       apt:
         name:
           - curl
@@ -32,6 +32,13 @@
         dest: /usr/local/bin
         remote_src: yes
 
+    - name: Disable fs.protected_regular for minikube compatibility
+      sysctl:
+        name: fs.protected_regular
+        value: 0
+        state: present
+        reload: yes
+
     - name: Install kubectl
       get_url:
         url: https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl
@@ -44,7 +51,7 @@
         dest: /usr/local/bin/minikube
         mode: "0755"
 
-    - name: Start minikube with driver=none 
+    - name: Start minikube with driver=none and containerd runtime
       command: minikube start --driver=none --container-runtime=containerd
       environment:
         CHANGE_MINIKUBE_NONE_USER: "true"
