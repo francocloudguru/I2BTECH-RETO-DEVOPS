@@ -1,17 +1,20 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: i2btech-reto-app-ingress
+  name: i2btech-ingress
   namespace: i2btech-reto-app-ns
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
-    - host: 172-68-0-6.nip.io
+    - host: 172.68.0.6.nip.io
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: i2btech-reto-app3
+                name: i2btech-service
                 port:
-                  number: 443
+                  number: 80
